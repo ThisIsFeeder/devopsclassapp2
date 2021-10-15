@@ -6,9 +6,7 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [ dev ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -19,7 +17,7 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    if: 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -46,3 +44,10 @@ jobs:
 
       - name: Image digest
         run: echo $(curl ipinfo.io/ip)
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      run: |
+        echo ${{ secrets.DOCKER_INSTANCE }} > secrets.pem
+        ssh -i secrets.pem admin@18.141.173.207 /home/admin/deploy.sh
