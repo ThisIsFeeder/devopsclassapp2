@@ -45,4 +45,4 @@ jobs:
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/app2:dev
 
       - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+        run: echo $(curl ipinfo.io/ip)
