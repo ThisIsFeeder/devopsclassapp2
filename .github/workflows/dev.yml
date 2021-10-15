@@ -54,3 +54,23 @@ jobs:
       - name: Deploy Service
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} /home/admin/deploy.sh
+
+      - name: Notify slack success
+        if: success()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: Discontract/github-action-slack-notify-deployment@v1
+        with:
+          channel: notification
+          status: SUCCESS
+          color: good
+
+      - name: Notify slack fail
+        if: failure()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: Discontract/github-action-slack-notify-deployment@v1
+        with:
+          channel: notification
+          status: FAILED
+          color: danger
