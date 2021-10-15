@@ -14,7 +14,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  deploy:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -42,13 +42,15 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/app2:dev
 
-      - name: Image digest
-        run: echo $(curl ipinfo.io/ip)
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }} 
+          known_hosts: '18.141.173.207'
 
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
+      - name: Adding Known Hosts
+        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
       - name: Deploy Service
         run: |
-          echo ${{ secrets.DOCKER_INSTANCE }} > secrets.pem
-          ssh -i secrets.pem admin@18.141.173.207 /home/admin/deploy.sh
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} /home/admin/deploy.sh
