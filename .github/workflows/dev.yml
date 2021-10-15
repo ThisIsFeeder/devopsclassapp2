@@ -48,6 +48,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      run: |
-        echo ${{ secrets.DOCKER_INSTANCE }} > secrets.pem
-        ssh -i secrets.pem admin@18.141.173.207 /home/admin/deploy.sh
+      - name: Deploy Service
+        run: |
+          echo ${{ secrets.DOCKER_INSTANCE }} > secrets.pem
+          ssh -i secrets.pem admin@18.141.173.207 /home/admin/deploy.sh
