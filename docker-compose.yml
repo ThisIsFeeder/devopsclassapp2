@@ -1,0 +1,10 @@
+services:
+  netflix:
+    image: thisisfeeder/netflix
+    ports:
+      - "8080:80"
+    networks:
+      - devops-network
+
+networks:
+  devops-network:

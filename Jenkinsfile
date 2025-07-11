@@ -17,10 +17,22 @@ pipeline{
                 }
             }
         }
-        stage('Deploy to docker swarm'){
-            steps{
-                script{
-                    sh 'docker stack deploy -c docker-compose.yml netflix'
+        stage('Copy Docker Compose to Server Master1') {
+            steps {
+                script {
+                sshPublisher(publishers: [
+                    sshPublisherDesc(
+                    configName: "swarm",
+                    transfers: [
+                        sshTransfer(
+                        sourceFiles: "docker-compose.yml",
+                        removePrefix: "",
+                        remoteDirectory: "",
+                        execCommand: "docker stack deploy network --compose-file /root/docker-compose.yml"
+                        )
+                    ],
+                    )
+                ])
                 }
             }
         }
